@@ -8,7 +8,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap');
         
-        /* 페이퍼로지 폰트 웹폰트 정의 */
         @font-face {
             font-family: 'Paperlogy';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Paperlogy-Medium.woff2') format('woff2');
@@ -23,15 +22,12 @@
         }
 
         :root {
-            /* 우유를 듬뿍 탄 마일드하고 부드러운 파스텔 톤 */
             --bg-mint: #F0F9F8;        
             --main-mint: #D1EFEA;      
             --dark-mint: #86C1B9;      
-            
             --bg-pink: #FFF0F2;        
             --main-pink: #FCDADF;      
             --dark-pink: #EAA4AE;      
-            
             --text-dark: #4A5157;      
             --text-muted: #9EADB6;     
             --frame-border: #B2C3CD;   
@@ -42,7 +38,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Paperlogy', 'Pretendard', sans-serif;
-            border-radius: 0 !important; /* 모서리 절대 직각 */
+            border-radius: 0 !important; 
         }
 
         body {
@@ -99,7 +95,6 @@
         header .counter {
             font-size: 11px;
             color: var(--text-muted);
-            letter-spacing: 0px;
         }
 
         header .counter .today {
@@ -117,7 +112,6 @@
             font-weight: 700;
             color: var(--dark-mint);
             margin-bottom: 8px;
-            letter-spacing: -0.2px;
         }
 
         .input-list {
@@ -139,7 +133,6 @@
             font-size: 13px;
             color: var(--text-dark);
             background-color: #FAFBFB;
-            transition: all 0.2s ease;
         }
 
         input[type="text"]:focus {
@@ -150,7 +143,6 @@
 
         .btn-remove {
             width: 36px;
-            padding: 0;
             background-color: #FFFFFF;
             color: var(--dark-pink);
             font-weight: bold;
@@ -160,7 +152,6 @@
         
         .btn-remove:hover {
             background-color: var(--bg-pink);
-            border-color: var(--dark-pink);
         }
 
         .btn-add {
@@ -173,12 +164,6 @@
             font-weight: 700;
             cursor: pointer;
             margin-bottom: 16px;
-            box-shadow: none;
-        }
-
-        .btn-add:hover {
-            background-color: var(--main-mint);
-            color: var(--text-dark);
         }
 
         .btn-group {
@@ -197,7 +182,6 @@
             background-color: #FFFFFF;
             color: var(--text-dark);
             box-shadow: 1px 1px 0px var(--frame-border);
-            transition: transform 0.1s, box-shadow 0.1s;
         }
 
         .btn-action:active {
@@ -208,16 +192,15 @@
         .btn-run {
             background-color: var(--main-pink);
             border-color: var(--dark-pink);
-            color: var(--text-dark);
             box-shadow: 1px 1px 0px var(--dark-pink);
         }
 
-        /* 저장된 링크 화면 디자인 */
         .result-section {
             display: none;
             border: 1px solid #E4EBEF;
             background-color: #FAFBFB;
             padding: 16px;
+            margin-bottom: 15px;
         }
 
         .result-title-bar {
@@ -237,7 +220,6 @@
             gap: 8px;
         }
 
-        /* 저장된 링크 개별 행(링크 + 삭제버튼) */
         .saved-link-row {
             display: flex;
             gap: 5px;
@@ -254,7 +236,6 @@
             background-color: #FFFFFF;
             border: 1px solid #E4EBEF;
             padding: 10px 12px;
-            transition: all 0.2s ease;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -264,7 +245,6 @@
             background-color: var(--bg-mint);
             border-color: var(--dark-mint);
             text-decoration: underline;
-            color: var(--text-dark);
         }
 
         .btn-delete-saved {
@@ -275,7 +255,6 @@
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .btn-delete-saved:hover {
@@ -283,7 +262,28 @@
             border-color: var(--dark-pink);
         }
 
-        /* 미니홈피 우측 장식용 세로 탭 */
+        /* 하단 노션 임베드 전용 백업/복구 슬롯 */
+        .backup-zone {
+            border-top: 1px dashed var(--frame-border);
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .btn-backup {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn-backup:hover {
+            color: var(--text-dark);
+        }
+
         .side-tabs {
             display: flex;
             flex-direction: column;
@@ -302,7 +302,6 @@
             padding: 10px 6px;
             writing-mode: vertical-rl;
             text-orientation: mixed;
-            cursor: default;
         }
 
         .tab.active {
@@ -320,7 +319,7 @@
             <div class="inner-frame">
                 <header>
                     <h1>사이버-𝖴𝖱𝖫 보관함</h1>
-                    <div class="counter">TODAY <span class="today">1</span> | TOTAL 999</div>
+                    <div class="counter">TODAY <span class="today">7</span> | TOTAL 777</div>
                 </header>
 
                 <div class="input-section">
@@ -328,7 +327,7 @@
                     <div class="input-list" id="inputList">
                         <div class="input-row">
                             <input type="text" class="url-input" placeholder="http://..." autocomplete="off">
-                            <button class="btn-remove" onclick="removeInput(this)" title="삭제">X</button>
+                            <button class="btn-remove" onclick="removeInput(this)">X</button>
                         </div>
                     </div>
                     <button class="btn-add" onclick="addInput()">+ URL 추가하기</button>
@@ -343,8 +342,12 @@
                     <div class="result-title-bar">
                         <span>저장된 링크 (클릭: 이동 / 우측: 삭제)</span>
                     </div>
-                    <div class="result-list" id="resultContainer">
-                        </div>
+                    <div class="result-list" id="resultContainer"></div>
+                </div>
+
+                <div class="backup-zone">
+                    <button class="btn-backup" onclick="exportLinks()">내보내기 (텍스트로 백업)</button>
+                    <button class="btn-backup" onclick="importLinks()">가져오기 (복구하기)</button>
                 </div>
             </div>
         </div>
@@ -356,22 +359,19 @@
     </div>
 
     <script>
-        // 페이지 로드 시 로컬스토리지에 저장된 링크 불러오기
         document.addEventListener("DOMContentLoaded", loadSavedLinks);
 
-        // 새로운 URL 입력칸 추가
         function addInput() {
             const inputList = document.getElementById('inputList');
             const row = document.createElement('div');
             row.className = 'input-row';
             row.innerHTML = `
                 <input type="text" class="url-input" placeholder="http://..." autocomplete="off">
-                <button class="btn-remove" onclick="removeInput(this)" title="삭제">X</button>
+                <button class="btn-remove" onclick="removeInput(this)">X</button>
             `;
             inputList.appendChild(row);
         }
 
-        // 특정 URL 입력칸 삭제
         function removeInput(btnElement) {
             const row = btnElement.parentElement;
             const inputList = document.getElementById('inputList');
@@ -382,18 +382,16 @@
             }
         }
 
-        // 입력칸 전체 초기화
         function clearInputs() {
             const inputList = document.getElementById('inputList');
             inputList.innerHTML = `
                 <div class="input-row">
                     <input type="text" class="url-input" placeholder="http://..." autocomplete="off">
-                    <button class="btn-remove" onclick="removeInput(this)" title="삭제">X</button>
+                    <button class="btn-remove" onclick="removeInput(this)">X</button>
                 </div>
             `;
         }
 
-        // URL을 로컬 스토리지에 저장하는 로직
         function saveLinks() {
             const inputs = document.querySelectorAll('.url-input');
             let links = JSON.parse(localStorage.getItem('myArchiveLinks') || '[]');
@@ -413,24 +411,22 @@
 
             if (hasNewLink) {
                 localStorage.setItem('myArchiveLinks', JSON.stringify(links));
-                loadSavedLinks(); // 저장 후 목록 갱신
-                clearInputs();    // 저장 성공 시 입력칸 깔끔하게 비우기
+                loadSavedLinks();
+                clearInputs();
             } else {
-                alert('저장할 URL 주소를 1개 이상 입력해주세요.');
+                alert('저장할 URL 주소를 입력해주세요.');
             }
         }
 
-        // 특정 인덱스의 저장된 링크 개별 삭제
         function deleteSavedLink(index) {
-            if (confirm('이 링크를 보관함에서 삭제하시겠습니까?')) {
+            if (confirm('이 링크를 삭제하시겠습니까?')) {
                 let links = JSON.parse(localStorage.getItem('myArchiveLinks') || '[]');
                 links.splice(index, 1);
                 localStorage.setItem('myArchiveLinks', JSON.stringify(links));
-                loadSavedLinks(); // 삭제 후 목록 갱신
+                loadSavedLinks();
             }
         }
 
-        // 저장된 링크 화면에 렌더링
         function loadSavedLinks() {
             const links = JSON.parse(localStorage.getItem('myArchiveLinks') || '[]');
             const resultContainer = document.getElementById('resultContainer');
@@ -440,21 +436,18 @@
 
             if (links.length > 0) {
                 resultPanel.style.display = 'block';
-                
                 links.forEach((urlString, index) => {
                     const rowDiv = document.createElement('div');
                     rowDiv.className = 'saved-link-row';
 
-                    // 링크 태그
                     const linkElement = document.createElement('a');
                     linkElement.className = 'result-link';
                     linkElement.href = urlString;
                     linkElement.target = '_blank';
                     linkElement.rel = 'noopener noreferrer';
                     linkElement.textContent = urlString;
-                    linkElement.title = urlString; // 말풍선으로 전체 주소 표시
+                    linkElement.title = urlString;
                     
-                    // 삭제 버튼 태그
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'btn-delete-saved';
                     deleteBtn.textContent = '삭제';
@@ -465,8 +458,37 @@
                     resultContainer.appendChild(rowDiv);
                 });
             } else {
-                // 저장된 링크가 없으면 패널 숨김
                 resultPanel.style.display = 'none';
+            }
+        }
+
+        // 모바일 노션 초기화 대비 [내보내기]
+        function exportLinks() {
+            const links = localStorage.getItem('myArchiveLinks') || '[]';
+            if (links === '[]') {
+                alert('백업할 데이터가 없습니다.');
+                return;
+            }
+            navigator.clipboard.writeText(links).then(() => {
+                alert('보관함 전체 데이터가 복사되었습니다!\n이 코드를 노션 텍스트 블록에 백업해 두세요.');
+            });
+        }
+
+        // 모바일 노션 초기화 대비 [가져오기]
+        function importLinks() {
+            const code = prompt('백업해 두었던 데이터 코드를 붙여넣어 주세요.');
+            if (!code) return;
+            try {
+                const parsed = JSON.parse(code);
+                if (Array.isArray(parsed)) {
+                    localStorage.setItem('myArchiveLinks', JSON.stringify(parsed));
+                    loadSavedLinks();
+                    alert('보관함 데이터가 성공적으로 복구되었습니다!');
+                } else {
+                    alert('올바른 데이터 형식이 아닙니다.');
+                }
+            } catch (e) {
+                alert('데이터 복구에 실패했습니다. 코드를 다시 확인해 주세요.');
             }
         }
     </script>
