@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Mini Space - Multi URL Prettifier</title>
+    <title>My Mini Space - Link Archive</title>
     <!-- 페이퍼로지(Paperlogy) 폰트 불러오기 및 기본 한글 폰트 백업 -->
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
     <style>
@@ -25,24 +25,23 @@
 
         :root {
             /* 우유를 듬뿍 탄 마일드하고 부드러운 파스텔 톤 */
-            --bg-mint: #F0F9F8;        /* 우유 탄 아주 연한 민트 배경 */
-            --main-mint: #D1EFEA;      /* 우유 듬뿍 민트색 */
-            --dark-mint: #86C1B9;      /* 차분하게 톤 다운된 민트 */
+            --bg-mint: #F0F9F8;        
+            --main-mint: #D1EFEA;      
+            --dark-mint: #86C1B9;      
             
-            --bg-pink: #FFF0F2;        /* 우유 탄 아주 연한 분홍 배경 */
-            --main-pink: #FCDADF;      /* 딸기우유색 */
-            --dark-pink: #EAA4AE;      /* 차분하게 톤 다운된 분홍 */
+            --bg-pink: #FFF0F2;        
+            --main-pink: #FCDADF;      
+            --dark-pink: #EAA4AE;      
             
-            --text-dark: #4A5157;      /* 너무 세지 않은 부드러운 차콜 */
-            --text-muted: #9EADB6;     /* 흐린 감성 폰트색 */
-            --frame-border: #B2C3CD;   /* 차분한 테두리 */
+            --text-dark: #4A5157;      
+            --text-muted: #9EADB6;     
+            --frame-border: #B2C3CD;   
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            /* 페이퍼로지 폰트를 최우선 적용 */
             font-family: 'Paperlogy', 'Pretendard', sans-serif;
             border-radius: 0 !important; /* 모서리 절대 직각 */
         }
@@ -51,7 +50,7 @@
             background-color: var(--bg-pink);
             background-image: linear-gradient(var(--bg-mint) 1px, transparent 1px),
                               linear-gradient(90deg, var(--bg-mint) 1px, transparent 1px);
-            background-size: 20px 20px; /* 미니홈피 모눈종이 패턴 */
+            background-size: 20px 20px; 
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -59,7 +58,6 @@
             padding: 20px;
         }
 
-        /* 미니홈피 전체 레이아웃 */
         .minihomepy-container {
             display: flex;
             align-items: flex-start;
@@ -68,7 +66,6 @@
             width: 100%;
         }
 
-        /* 미니홈피 외곽 마일드 민트 프레임 */
         .outer-frame {
             background-color: var(--main-mint);
             border: 1px solid var(--frame-border);
@@ -77,7 +74,6 @@
             box-shadow: 5px 5px 0px rgba(74, 81, 87, 0.08);
         }
 
-        /* 미니홈피 내부 흰색 스킨 */
         .inner-frame {
             background-color: #FFFFFF;
             border: 1px dashed var(--frame-border);
@@ -85,7 +81,6 @@
             position: relative;
         }
 
-        /* 상단 타이틀 바 */
         header {
             display: flex;
             justify-content: space-between;
@@ -113,7 +108,6 @@
             font-weight: 700;
         }
 
-        /* 입력 폼 영역 */
         .input-section {
             margin-bottom: 20px;
         }
@@ -188,7 +182,6 @@
             color: var(--text-dark);
         }
 
-        /* 버튼 영역 */
         .btn-group {
             display: flex;
             gap: 6px;
@@ -220,7 +213,7 @@
             box-shadow: 1px 1px 0px var(--dark-pink);
         }
 
-        /* 결과 화면 디자인 */
+        /* 결과 화면 디자인 (하이퍼링크 스타일) */
         .result-section {
             display: none;
             border: 1px solid #E4EBEF;
@@ -245,41 +238,24 @@
             gap: 8px;
         }
 
-        .result-item {
-            position: relative;
+        .result-link {
+            display: block;
             font-size: 13px;
-            color: var(--text-dark);
+            color: var(--dark-mint);
+            text-decoration: none;
             word-break: break-all;
             line-height: 1.5;
             background-color: #FFFFFF;
             border: 1px solid #E4EBEF;
             padding: 12px;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
         }
 
-        .result-item:hover {
-            background-color: var(--bg-pink);
-            border-color: var(--dark-pink);
-        }
-
-        .toast-msg {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: var(--dark-pink);
-            color: #FFF;
-            font-size: 10px;
-            padding: 4px 8px;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.2s;
-            pointer-events: none;
-        }
-
-        .toast-msg.show {
-            opacity: 1;
+        .result-link:hover {
+            background-color: var(--bg-mint);
+            border-color: var(--dark-mint);
+            text-decoration: underline;
+            color: var(--text-dark);
         }
 
         /* 미니홈피 우측 장식용 세로 탭 */
@@ -319,12 +295,12 @@
         <div class="outer-frame">
             <div class="inner-frame">
                 <header>
-                    <h1>♥ Links ♥</h1>
-                    <div class="counter">TODAY <span class="today">486</span> | TOTAL 1205</div>
+                    <h1>사이버-𝖴𝖱𝖫 보관함</h1>
+                    <div class="counter">TODAY <span class="today">1</span> | TOTAL 999</div>
                 </header>
 
                 <div class="input-section">
-                    <label>┌─ 변환할 URL 주소 입력 ─┐</label>
+                    <label>┌─ 저장할 링크 주소 입력 ─┐</label>
                     <div class="input-list" id="inputList">
                         <div class="input-row">
                             <input type="text" class="url-input" placeholder="http://..." autocomplete="off">
@@ -335,16 +311,16 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn-action btn-run" onclick="prettifyURLs()">한번에 정리하기</button>
+                    <button class="btn-action btn-run" onclick="saveLinks()">링크 저장하기</button>
                     <button class="btn-action" onclick="clearAll()">전체 비우기</button>
                 </div>
 
                 <div class="result-section" id="resultPanel">
                     <div class="result-title-bar">
-                        <span>결과 주소 (항목을 클릭하면 자동 복사)</span>
+                        <span>저장된 링크 (클릭하면 새 창으로 이동합니다)</span>
                     </div>
                     <div class="result-list" id="resultContainer">
-                        <!-- 결과 아이템들이 여기에 추가됩니다 -->
+                        <!-- 링크 아이템들이 여기에 추가됩니다 -->
                     </div>
                 </div>
             </div>
@@ -353,7 +329,7 @@
         <!-- 우측 감성 데코 탭 -->
         <div class="side-tabs">
             <div class="tab active">홈</div>
-            <div class="tab" style="background-color: var(--main-mint);">정리</div>
+            <div class="tab" style="background-color: var(--main-mint);">링크</div>
         </div>
     </div>
 
@@ -382,8 +358,8 @@
             }
         }
 
-        // URL 정리 핵심 로직
-        function prettifyURLs() {
+        // URL을 하이퍼링크로 렌더링하는 로직
+        function saveLinks() {
             const inputs = document.querySelectorAll('.url-input');
             const resultContainer = document.getElementById('resultContainer');
             const resultPanel = document.getElementById('resultPanel');
@@ -391,55 +367,31 @@
             resultContainer.innerHTML = ''; // 기존 결과 초기화
             let hasValidUrl = false;
 
-            const trackingParams = [
-                'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
-                'fbclid', 'gclid', 'cx', 'ie', 'coid', 'campaign_id'
-            ];
-
             inputs.forEach((input) => {
                 let urlString = input.value.trim();
                 if (!urlString) return; // 빈 칸은 건너뜀
 
+                // 프로토콜(http/https)이 없으면 기본으로 추가하여 링크가 정상 작동하도록 처리
                 if (!/^https?:\/\//i.test(urlString)) {
                     urlString = 'http://' + urlString;
                 }
 
-                try {
-                    const url = new URL(urlString);
-                    
-                    // 불필요한 트래킹 파라미터 제거
-                    trackingParams.forEach(param => url.searchParams.delete(param));
-
-                    // 한글 깨짐 방지 디코딩
-                    let prettyURL = decodeURIComponent(url.toString());
-
-                    // 결과 아이템 생성
-                    const item = document.createElement('div');
-                    item.className = 'result-item';
-                    item.innerHTML = `
-                        <span class="url-text">${prettyURL}</span>
-                        <span class="toast-msg">복사 완료!</span>
-                    `;
-                    item.onclick = function() { copyToClipboard(this, prettyURL); };
-                    
-                    resultContainer.appendChild(item);
-                    hasValidUrl = true;
-
-                } catch (error) {
-                    // 유효하지 않은 URL 처리
-                    const errorItem = document.createElement('div');
-                    errorItem.className = 'result-item';
-                    errorItem.style.color = 'var(--dark-pink)';
-                    errorItem.textContent = '올바르지 않은 URL 주소입니다.';
-                    resultContainer.appendChild(errorItem);
-                    hasValidUrl = true;
-                }
+                // a 태그(하이퍼링크) 생성
+                const linkElement = document.createElement('a');
+                linkElement.className = 'result-link';
+                linkElement.href = urlString;
+                linkElement.target = '_blank'; // 새 탭에서 열기
+                linkElement.rel = 'noopener noreferrer'; // 보안 속성
+                linkElement.textContent = urlString;
+                
+                resultContainer.appendChild(linkElement);
+                hasValidUrl = true;
             });
 
             if (hasValidUrl) {
                 resultPanel.style.display = 'block';
             } else {
-                alert('정리할 URL 주소를 1개 이상 입력해주세요.');
+                alert('저장할 URL 주소를 1개 이상 입력해주세요.');
             }
         }
 
@@ -453,19 +405,6 @@
                 </div>
             `;
             document.getElementById('resultPanel').style.display = 'none';
-        }
-
-        // 클립보드 복사 및 개별 토스트 메시지
-        function copyToClipboard(element, text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const toast = element.querySelector('.toast-msg');
-                if(toast) {
-                    toast.classList.add('show');
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                    }, 1500);
-                }
-            });
         }
     </script>
 </body>
