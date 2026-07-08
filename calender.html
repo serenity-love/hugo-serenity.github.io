@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Aesthetic Calendar</title>
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Paperlogy-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Paperlogy-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        :root {
+            /* image_0ee05b.jpg의 몽환적인 스펙트럼 반영 */
+            --gradient-start: #FFF0F2; /* 우유빛 파스텔 핑크 */
+            --gradient-end: #D7EDE9;   /* 안개 낀 듯한 딥 민트 그레이 */
+            --panel-bg: rgba(255, 255, 255, 0.93);
+            
+            --color-dark: #1F302D;     /* 이미지 중심부의 차분하고 깊은 차콜 민트 */
+            --color-accent: #EAA4AE;   /* 오묘하게 시선을 끄는 핑키쉬 로즈 */
+            --color-muted: #8FA4A0;    /* 부드러운 에어리 민트 브라운 */
+            --line-color: rgba(44, 74, 68, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Paperlogy', 'Pretendard', sans-serif;
+            border-radius: 0 !important; /* 칼 같은 직각 무드 유지 */
+        }
+
+        body {
+            /* 이미지의 색상 번짐을 표현한 그라데이션 background */
+            background: linear-gradient(135deg, var(--gradient-start) 0%, #FFFFFF 50%, var(--gradient-end) 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .calendar-container {
+            background-color: var(--panel-bg);
+            border: 1px solid rgba(31, 48, 45, 0.15);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 32px;
+            /* 감성적인 레이어감을 주는 섀도우 */
+            box-shadow: 0 20px 40px rgba(44, 74, 68, 0.06), 
+                        10px 10px 0px rgba(234, 164, 174, 0.15);
+            position: relative;
+        }
+
+        /* 상단 오브제 텍스트 레이아웃 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 36px;
+        }
+
+        .brand-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--color-accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .today-marker {
+            font-size: 11px;
+            color: var(--color-muted);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 내비게이션 바 (월 선택) */
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--line-color);
+        }
+
+        .month-display {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .btn-nav {
+            background: none;
+            border: none;
+            color: var(--color-dark);
+            font-size: 16px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .btn-nav:hover {
+            color: var(--color-accent);
+        }
+
+        /* 달력 그리드 구조 */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            row-gap: 14px;
+            text-align: center;
+        }
+
+        .weekday {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--color-muted);
+            padding-bottom: 12px;
+        }
+
+        /* 일요일, 토요일 감성 컬러링 */
+        .weekday:nth-child(7n+1), .day:nth-child(7n+1) { color: var(--color-accent); }
+        .weekday:nth-child(7n), .day:nth-child(7n) { color: #6D8E88; }
+
+        .day {
+            font-size: 13px;
+            font-weight: 500;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-dark);
+            position: relative;
+            cursor: default;
+        }
+
+        .day.empty {
+            pointer-events: none;
+        }
+
+        /* 이미지 속의 섬세한 스파클/점(Node) 모티브를 담은 오늘 날짜 하이라이트 */
+        .day.today-highlight {
+            font-weight: 700;
+            color: var(--color-dark) !important;
+        }
+
+        .day.today-highlight::before {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border: 1px dashed var(--color-accent);
+            background-color: rgba(255, 240, 242, 0.6);
+            z-index: -1;
+            animation: rotateNode 12s linear infinite;
+        }
+
+        .day.today-highlight::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 4px;
+            height: 4px;
+            background-color: var(--color-accent);
+        }
+
+        @keyframes rotateNode {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calendar-container">
+        <header>
+            <div class="brand-title">♥ / 2026</div>
+            <div class="today-marker" id="todayMarker">00.00 TODAY</div>
+        </header>
+
+        <div class="calendar-nav">
+            <div class="month-display" id="monthDisplay">January</div>
+            <div>
+                <button class="btn-nav" onclick="moveMonth(-1)" style="display:inline-block;">&lt;</button>
+                <button class="btn-nav" onclick="moveMonth(1)" style="display:inline-block;">&gt;</button>
+            </div>
+        </div>
+
+        <div class="calendar-grid">
+            <div class="weekday">S</div>
+            <div class="weekday">M</div>
+            <div class="weekday">T</div>
+            <div class="weekday">W</div>
+            <div class="weekday">T</div>
+            <div class="weekday">F</div>
+            <div class="weekday">S</div>
+
+            <div id="daysContainer" style="display: contents;"></div>
+        </div>
+    </div>
+
+    <script>
+        const today = new Date();
+        let currentYear = 2026;
+        let currentMonth = today.getMonth();
+
+        // 영문 월 표기 매칭으로 더 감성적인 무드 연출
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June", 
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('todayMarker').textContent = `${mm}.${dd} TODAY`;
+
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        function renderCalendar(year, month) {
+            const daysContainer = document.getElementById('daysContainer');
+            const monthDisplay = document.getElementById('monthDisplay');
+
+            // 영문 월 표기 + 연도 배치
+            monthDisplay.textContent = `${monthNames[month]} ${year}`;
+            daysContainer.innerHTML = '';
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptySlot = document.createElement('div');
+                emptySlot.className = 'day empty';
+                daysContainer.appendChild(emptySlot);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const daySlot = document.createElement('div');
+                daySlot.className = 'day';
+                daySlot.textContent = day;
+
+                if (
+                    year === today.getFullYear() &&
+                    month === today.getMonth() &&
+                    day === today.getDate()
+                ) {
+                    daySlot.classList.add('today-highlight');
+                }
+
+                daysContainer.appendChild(daySlot);
+            }
+        }
+
+        function moveMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentYear, currentMonth);
+        }
+    </script>
+</body>
+</html>
