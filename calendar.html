@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 Aesthetic Calendar</title>
+    <title>2026 Mini Aesthetic Calendar</title>
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
     <style>
         @font-face {
@@ -20,14 +20,13 @@
         }
 
         :root {
-            /* image_0ee05b.jpg의 몽환적인 스펙트럼 반영 */
-            --gradient-start: #FFF0F2; /* 우유빛 파스텔 핑크 */
-            --gradient-end: #D7EDE9;   /* 안개 낀 듯한 딥 민트 그레이 */
+            --gradient-start: #FFF0F2; 
+            --gradient-end: #D7EDE9;   
             --panel-bg: rgba(255, 255, 255, 0.93);
             
-            --color-dark: #1F302D;     /* 이미지 중심부의 차분하고 깊은 차콜 민트 */
-            --color-accent: #EAA4AE;   /* 오묘하게 시선을 끄는 핑키쉬 로즈 */
-            --color-muted: #8FA4A0;    /* 부드러운 에어리 민트 브라운 */
+            --color-dark: #1F302D;     
+            --color-accent: #EAA4AE;   
+            --color-muted: #8FA4A0;    
             --line-color: rgba(44, 74, 68, 0.12);
         }
 
@@ -36,67 +35,63 @@
             margin: 0;
             padding: 0;
             font-family: 'Paperlogy', 'Pretendard', sans-serif;
-            border-radius: 0 !important; /* 칼 같은 직각 무드 유지 */
+            border-radius: 0 !important; 
         }
 
         body {
-            /* 이미지의 색상 번짐을 표현한 그라데이션 background */
             background: linear-gradient(135deg, var(--gradient-start) 0%, #FFFFFF 50%, var(--gradient-end) 100%);
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 24px;
+            padding: 12px; /* 패딩 축소 */
         }
 
         .calendar-container {
             background-color: var(--panel-bg);
             border: 1px solid rgba(31, 48, 45, 0.15);
             width: 100%;
-            max-width: 400px;
-            padding: 40px 32px;
-            /* 감성적인 레이어감을 주는 섀도우 */
-            box-shadow: 0 20px 40px rgba(44, 74, 68, 0.06), 
-                        10px 10px 0px rgba(234, 164, 174, 0.15);
+            max-width: 320px; /* 가로 크기 축소 (400px -> 320px) */
+            padding: 24px 20px; /* 내부 여백 축소 (40px -> 24px) */
+            box-shadow: 0 10px 25px rgba(44, 74, 68, 0.05), 
+                        6px 6px 0px rgba(234, 164, 174, 0.15);
             position: relative;
         }
 
-        /* 상단 오브제 텍스트 레이아웃 */
         header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 36px;
+            margin-bottom: 20px; /* 간격 축소 */
         }
 
         .brand-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             color: var(--color-accent);
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
         }
 
         .today-marker {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--color-muted);
             font-weight: 500;
-            letter-spacing: 0.5px;
         }
 
-        /* 내비게이션 바 (월 선택) */
+        /* 월 선택 바 간격 축소 */
         .calendar-nav {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 32px;
-            padding-bottom: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
             border-bottom: 1px solid var(--line-color);
         }
 
         .month-display {
-            font-size: 20px;
+            font-size: 16px; /* 폰트 크기 축소 */
             font-weight: 700;
             color: var(--color-dark);
             letter-spacing: -0.5px;
@@ -106,43 +101,41 @@
             background: none;
             border: none;
             color: var(--color-dark);
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            width: 30px;
-            height: 30px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: color 0.2s;
         }
 
         .btn-nav:hover {
             color: var(--color-accent);
         }
 
-        /* 달력 그리드 구조 */
+        /* 날짜 그리드 조밀하게 조정 */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            row-gap: 14px;
+            row-gap: 6px; /* 행 간격 축소 (14px -> 6px) */
             text-align: center;
         }
 
         .weekday {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             color: var(--color-muted);
-            padding-bottom: 12px;
+            padding-bottom: 8px;
         }
 
-        /* 일요일, 토요일 감성 컬러링 */
         .weekday:nth-child(7n+1), .day:nth-child(7n+1) { color: var(--color-accent); }
         .weekday:nth-child(7n), .day:nth-child(7n) { color: #6D8E88; }
 
         .day {
-            font-size: 13px;
+            font-size: 12px; /* 날짜 크기 축소 */
             font-weight: 500;
-            height: 36px;
+            height: 28px; /* 날짜 높이 축소 (36px -> 28px) */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -155,7 +148,7 @@
             pointer-events: none;
         }
 
-        /* 이미지 속의 섬세한 스파클/점(Node) 모티브를 담은 오늘 날짜 하이라이트 */
+        /* 작아진 크기에 맞게 하이라이트 원 크기 조정 */
         .day.today-highlight {
             font-weight: 700;
             color: var(--color-dark) !important;
@@ -164,8 +157,8 @@
         .day.today-highlight::before {
             content: '';
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: 22px; /* 축소 */
+            height: 22px; /* 축소 */
             border: 1px dashed var(--color-accent);
             background-color: rgba(255, 240, 242, 0.6);
             z-index: -1;
@@ -175,10 +168,10 @@
         .day.today-highlight::after {
             content: '';
             position: absolute;
-            top: 3px;
-            right: 3px;
-            width: 4px;
-            height: 4px;
+            top: 1px;
+            right: 2px;
+            width: 3px;
+            height: 3px;
             background-color: var(--color-accent);
         }
 
@@ -192,15 +185,15 @@
 
     <div class="calendar-container">
         <header>
-            <div class="brand-title">♥ / 2026</div>
+            <div class="brand-title">叙情 / 2026</div>
             <div class="today-marker" id="todayMarker">00.00 TODAY</div>
         </header>
 
         <div class="calendar-nav">
             <div class="month-display" id="monthDisplay">January</div>
-            <div>
-                <button class="btn-nav" onclick="moveMonth(-1)" style="display:inline-block;">&lt;</button>
-                <button class="btn-nav" onclick="moveMonth(1)" style="display:inline-block;">&gt;</button>
+            <div style="display: flex; gap: 4px;">
+                <button class="btn-nav" onclick="moveMonth(-1)">&lt;</button>
+                <button class="btn-nav" onclick="moveMonth(1)">&gt;</button>
             </div>
         </div>
 
@@ -222,7 +215,6 @@
         let currentYear = 2026;
         let currentMonth = today.getMonth();
 
-        // 영문 월 표기 매칭으로 더 감성적인 무드 연출
         const monthNames = [
             "January", "February", "March", "April", "May", "June", 
             "July", "August", "September", "October", "November", "December"
@@ -240,7 +232,6 @@
             const daysContainer = document.getElementById('daysContainer');
             const monthDisplay = document.getElementById('monthDisplay');
 
-            // 영문 월 표기 + 연도 배치
             monthDisplay.textContent = `${monthNames[month]} ${year}`;
             daysContainer.innerHTML = '';
 
