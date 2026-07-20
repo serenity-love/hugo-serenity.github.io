@@ -9,19 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,500&family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#15140F;
+  --ink:#332F45;
   --paper:#FFFFFF;
-  --paper-soft:#F6F5F1;
-  --line:#E3E1D9;
-  --accent:#D7263D;
-  --accent-deep:#A31728;
-  --gold:#B8985A;
-  --muted:#8C8579;
+  --paper-soft:#F7F4EA;
+  --line:#E5E0EC;
+  --lavender:#DED9E2;
+  --periwinkle:#C0B9DD;
+  --periwinkle-deep:#847AAE;
+  --wisteria:#80A1D4;
+  --wisteria-deep:#4C6FA0;
+  --aqua:#75C9C8;
+  --aqua-deep:#3C8E8C;
+  --accent:var(--wisteria);
+  --accent-deep:var(--wisteria-deep);
+  --gold:var(--periwinkle-deep);
+  --muted:#93899F;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
-  background:#EDEBE4;
+  background:#EFEDF6;
   font-family:'Noto Sans KR',sans-serif;
   color:var(--ink);
   -webkit-font-smoothing:antialiased;
@@ -34,8 +41,8 @@ body{
 /* ===== toolbar ===== */
 .toolbar{
   position:sticky;top:0;z-index:50;
-  display:flex;align-items:center;justify-content:center;gap:14px;
-  padding:14px 18px;background:var(--ink);color:var(--paper);flex-wrap:wrap;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:14px 18px;background:#2E2E48;color:var(--paper);flex-wrap:wrap;
 }
 .toolbar .brandmark{
   font-family:'Fraunces',serif;font-weight:600;font-size:14px;letter-spacing:.03em;
@@ -46,18 +53,22 @@ body{
   background:transparent;color:var(--paper);border:1px solid rgba(255,255,255,.22);
   padding:8px 14px;border-radius:20px;cursor:pointer;transition:.15s;white-space:nowrap;
 }
-.toolbar button:hover{background:rgba(255,255,255,.1);border-color:var(--accent);}
+.toolbar button:hover{background:rgba(255,255,255,.1);border-color:var(--aqua);}
+.toolbar button:disabled{opacity:.45;cursor:default;}
 .toolbar .dots{display:flex;gap:7px;align-items:center;}
 .toolbar .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.28);cursor:pointer;transition:.15s;}
-.toolbar .dot.active{background:var(--accent);width:20px;border-radius:5px;}
-.toolbar .save-btn{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;}
-.toolbar .save-btn:hover{background:var(--accent-deep);}
-.help-strip{text-align:center;font-size:12px;color:var(--muted);padding:9px 12px;background:#DFDCD1;letter-spacing:.02em;}
-.help-strip b{color:var(--accent-deep);}
+.toolbar .dot.active{background:var(--aqua);width:20px;border-radius:5px;}
+.toolbar .save-btn{background:var(--wisteria-deep);border-color:var(--wisteria-deep);color:#fff;font-weight:700;}
+.toolbar .save-btn:hover{background:var(--wisteria);}
+.toolbar .pdf-btn{background:var(--aqua-deep);border-color:var(--aqua-deep);color:#fff;font-weight:700;}
+.toolbar .pdf-btn:hover{background:var(--aqua);}
+.export-status{font-size:12px;color:var(--aqua);min-width:88px;}
+.help-strip{text-align:center;font-size:12px;color:var(--muted);padding:9px 12px;background:#EAE6F2;letter-spacing:.02em;}
+.help-strip b{color:var(--wisteria-deep);}
 
 /* ===== stage ===== */
 .stage{padding:38px 16px 70px;display:flex;justify-content:center;}
-.spread{display:none;gap:0;width:100%;max-width:1360px;filter:drop-shadow(0 26px 54px rgba(0,0,0,.16));}
+.spread{display:none;gap:0;width:100%;max-width:1360px;filter:drop-shadow(0 26px 54px rgba(60,50,90,.14));}
 .spread.active{display:flex;}
 .page{
   position:relative;flex:1 1 0;aspect-ratio:3/4;background:var(--paper);
@@ -66,14 +77,14 @@ body{
 }
 .page.left{border-radius:6px 0 0 6px;}
 .page.right{border-radius:0 6px 6px 0;}
-.gutter{width:14px;flex:0 0 14px;background:linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.015) 30%, rgba(0,0,0,.015) 70%, rgba(0,0,0,.10));}
+.gutter{width:14px;flex:0 0 14px;background:linear-gradient(90deg, rgba(80,70,110,.09), rgba(80,70,110,.015) 30%, rgba(80,70,110,.015) 70%, rgba(80,70,110,.09));}
 
 .running{
   display:flex;justify-content:space-between;align-items:center;
   font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
   border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:clamp(14px,2.2vw,26px);flex:0 0 auto;
 }
-.folio{font-family:'Fraunces',serif;font-weight:600;font-size:11px;display:flex;align-items:center;gap:8px;letter-spacing:.04em;color:var(--accent-deep);}
+.folio{font-family:'Fraunces',serif;font-weight:600;font-size:11px;display:flex;align-items:center;gap:8px;letter-spacing:.04em;color:var(--wisteria-deep);}
 .foot{
   margin-top:auto;padding-top:10px;border-top:1px solid var(--line);
   display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);
@@ -84,11 +95,10 @@ body{
 /* editable */
 [contenteditable="true"]{outline:none;border-radius:3px;transition:background .15s;}
 [contenteditable="true"]:hover{background:var(--paper-soft);}
-[contenteditable="true"]:focus{background:#FBF2E9;box-shadow:0 0 0 1px var(--gold);}
+[contenteditable="true"]:focus{background:#F1EEF9;box-shadow:0 0 0 1px var(--periwinkle-deep);}
 [data-ph]:empty:before{content:attr(data-ph);color:var(--muted);opacity:.7;}
 
 /* ===== COVER ===== */
-.cover-page .running{border-color:var(--line);}
 .cover-top{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:clamp(18px,3vw,30px);}
 .mast{
   font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(30px,4.4vw,50px);
@@ -105,27 +115,27 @@ body{
 .cover-photo.has-img{border:none;}
 .coverlines{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:14px;flex:0 0 auto;}
 .coverline{font-size:12.5px;line-height:1.5;display:flex;gap:8px;}
-.coverline b{color:var(--accent);font-weight:700;font-family:'Fraunces',serif;flex:0 0 auto;}
+.coverline b{color:var(--wisteria-deep);font-weight:700;font-family:'Fraunces',serif;flex:0 0 auto;}
 .coverline span{flex:1;min-height:1.4em;}
 
 /* ===== CONTENTS ===== */
-.kicker{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:13px;color:var(--accent-deep);margin:0 0 4px;}
+.kicker{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:13px;color:var(--wisteria-deep);margin:0 0 4px;}
 .headline{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(22px,2.6vw,32px);line-height:1.16;margin:0 0 14px;letter-spacing:-.01em;}
-.editor-note p{font-size:12.5px;line-height:1.85;color:#39362F;margin:0 0 4px;min-height:1.8em;}
+.editor-note p{font-size:12.5px;line-height:1.85;color:#463F55;margin:0 0 4px;min-height:1.8em;}
 .divider{height:1px;background:var(--line);margin:18px 0;border:none;}
 .toc-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px;}
 .toc-list li{display:flex;align-items:baseline;gap:10px;font-size:12.5px;}
-.toc-num{font-family:'Fraunces',serif;font-weight:600;color:var(--gold);width:20px;flex:0 0 20px;}
+.toc-num{font-family:'Fraunces',serif;font-weight:600;color:var(--periwinkle-deep);width:20px;flex:0 0 20px;}
 .toc-title{font-weight:500;}
-.toc-fill{flex:1;border-bottom:1px dotted #C9C6BC;margin:0 6px 3px;}
+.toc-fill{flex:1;border-bottom:1px dotted #CFC9DC;margin:0 6px 3px;}
 .toc-page{color:var(--muted);font-family:'Fraunces',serif;}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-.chip{font-size:11px;padding:5px 12px;border-radius:20px;background:var(--paper);border:1px solid var(--line);color:var(--ink);position:relative;display:inline-flex;align-items:center;gap:6px;}
+.chip{font-size:11px;padding:5px 12px;border-radius:20px;background:var(--lavender);border:1px solid var(--periwinkle);color:var(--ink);position:relative;display:inline-flex;align-items:center;gap:6px;}
 .chip-text{min-width:14px;}
-.chip .x{width:14px;height:14px;border-radius:50%;background:var(--accent);color:#fff;font-size:9px;line-height:14px;text-align:center;cursor:pointer;display:none;}
+.chip .x{width:14px;height:14px;border-radius:50%;background:var(--wisteria-deep);color:#fff;font-size:9px;line-height:14px;text-align:center;cursor:pointer;display:none;}
 .chip:hover .x{display:inline-block;}
-.add-chip-btn,.add-btn{font-size:11px;font-weight:500;color:var(--accent-deep);background:none;border:1px dashed var(--accent-deep);border-radius:20px;padding:5px 12px;cursor:pointer;}
-.add-chip-btn:hover,.add-btn:hover{background:rgba(215,38,61,.06);}
+.add-chip-btn,.add-btn{font-size:11px;font-weight:500;color:var(--wisteria-deep);background:none;border:1px dashed var(--wisteria-deep);border-radius:20px;padding:5px 12px;cursor:pointer;}
+.add-chip-btn:hover,.add-btn:hover{background:rgba(76,111,160,.07);}
 
 /* ===== CHARACTER PAGE ===== */
 .char-photo{
@@ -138,26 +148,26 @@ body{
 .char-photo.has-img{border:none;}
 .char-name-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px;}
 .char-realname{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(20px,2.2vw,26px);min-width:80px;}
-.char-codename{font-family:'Fraunces',serif;font-style:italic;font-size:13px;color:var(--accent-deep);min-width:60px;}
+.char-codename{font-family:'Fraunces',serif;font-style:italic;font-size:13px;color:var(--wisteria-deep);min-width:60px;}
 .char-role{font-size:11px;color:var(--muted);margin-bottom:14px;letter-spacing:.02em;min-height:1.4em;}
 .info-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:14px;}
 .info-table tr{border-bottom:1px solid var(--line);}
 .info-table td{padding:7px 2px;vertical-align:top;}
 .info-table td.k{width:64px;color:var(--muted);font-weight:500;letter-spacing:.02em;}
 .info-table td.v{font-weight:500;min-height:1.4em;}
-.char-desc{font-size:12px;line-height:1.85;color:#39362F;flex:1;min-height:3em;}
+.char-desc{font-size:12px;line-height:1.85;color:#463F55;flex:1;min-height:3em;}
 .trait3{display:flex;gap:10px;margin-bottom:14px;}
-.trait3 span{font-family:'Fraunces',serif;font-weight:600;font-size:13px;padding:5px 3px;border-bottom:2px solid var(--accent);min-width:34px;}
+.trait3 span{font-family:'Fraunces',serif;font-weight:600;font-size:13px;padding:5px 3px;border-bottom:2px solid var(--aqua-deep);min-width:34px;}
 
 /* ===== TIMELINE ===== */
 .tl-col-title{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;}
-.tl-tag{font-family:'Fraunces',serif;font-weight:900;font-size:22px;color:var(--gold);min-width:30px;}
+.tl-tag{font-family:'Fraunces',serif;font-weight:900;font-size:22px;color:var(--periwinkle-deep);min-width:30px;}
 .tl-sub{font-size:11px;color:var(--muted);min-width:60px;}
 .timeline-track{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:0;position:relative;padding-left:14px;border-left:1px solid var(--line);}
 .tl-item{position:relative;padding:0 0 14px 14px;}
-.tl-item::before{content:'';position:absolute;left:-19px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--accent);}
-.tl-date{font-family:'Fraunces',serif;font-weight:600;font-size:11px;color:var(--accent-deep);margin-bottom:2px;min-height:1.3em;min-width:40px;}
-.tl-body{font-size:11.5px;line-height:1.6;color:#39362F;min-height:1.6em;}
+.tl-item::before{content:'';position:absolute;left:-19px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--wisteria-deep);}
+.tl-date{font-family:'Fraunces',serif;font-weight:600;font-size:11px;color:var(--wisteria-deep);margin-bottom:2px;min-height:1.3em;min-width:40px;}
+.tl-body{font-size:11.5px;line-height:1.6;color:#463F55;min-height:1.6em;}
 .tl-del{float:right;font-size:10px;color:var(--muted);cursor:pointer;opacity:0;transition:.15s;margin-left:6px;}
 .tl-item:hover .tl-del{opacity:1;}
 .tl-add-wrap{padding-left:14px;margin-top:6px;}
@@ -172,18 +182,18 @@ body{
 .look-photo .up-hint{font-size:11px;color:var(--muted);text-align:center;}
 .look-photo.has-img .up-hint{display:none;}
 .look-photo.has-img{border:none;}
-.look-from{font-size:11px;color:var(--accent-deep);font-weight:700;margin-bottom:4px;letter-spacing:.02em;min-height:1.4em;}
-.look-caption{font-size:12px;line-height:1.7;color:#39362F;min-height:2em;}
+.look-from{font-size:11px;color:var(--wisteria-deep);font-weight:700;margin-bottom:4px;letter-spacing:.02em;min-height:1.4em;}
+.look-caption{font-size:12px;line-height:1.7;color:#463F55;min-height:2em;}
 
 /* ===== CHEMISTRY ===== */
 .chem-row{margin-bottom:14px;}
 .chem-label-row{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px;}
 .chem-label{font-weight:500;}
-.chem-val{font-family:'Fraunces',serif;font-weight:700;color:var(--accent-deep);}
+.chem-val{font-family:'Fraunces',serif;font-weight:700;color:var(--wisteria-deep);}
 .chem-track{height:6px;background:var(--paper-soft);border-radius:4px;overflow:hidden;position:relative;border:1px solid var(--line);}
-.chem-fill{height:100%;background:var(--accent);border-radius:4px;}
-.chem-range{width:100%;margin-top:4px;accent-color:var(--accent);height:14px;cursor:pointer;}
-.quote-item{border-left:2px solid var(--gold);padding:4px 0 4px 12px;margin-bottom:10px;font-family:'Fraunces',serif;font-style:italic;font-size:12.5px;line-height:1.6;position:relative;}
+.chem-fill{height:100%;background:linear-gradient(90deg,var(--aqua),var(--wisteria-deep));border-radius:4px;}
+.chem-range{width:100%;margin-top:4px;accent-color:var(--wisteria-deep);height:14px;cursor:pointer;}
+.quote-item{border-left:2px solid var(--periwinkle-deep);padding:4px 0 4px 12px;margin-bottom:10px;font-family:'Fraunces',serif;font-style:italic;font-size:12.5px;line-height:1.6;position:relative;}
 .quote-text{display:block;min-height:1.6em;}
 .quote-who{display:block;font-family:'Noto Sans KR',sans-serif;font-style:normal;font-size:10px;color:var(--muted);margin-top:3px;letter-spacing:.05em;min-height:1.3em;}
 .q-del{position:absolute;right:0;top:2px;font-size:10px;color:var(--muted);cursor:pointer;opacity:0;}
@@ -214,9 +224,11 @@ body.exporting [contenteditable="true"]:focus{background:transparent;box-shadow:
   <button id="prevBtn" class="ui-only">‹ 이전</button>
   <div class="dots" id="dots"></div>
   <button id="nextBtn" class="ui-only">다음 ›</button>
-  <button id="saveBtn" class="save-btn">◈ 이 페이지 PNG 저장</button>
+  <span class="export-status ui-only" id="exportStatus"></span>
+  <button id="saveAllPngBtn" class="save-btn">◈ PNG 전체 저장</button>
+  <button id="savePdfBtn" class="pdf-btn">▤ PDF로 저장</button>
 </div>
-<div class="help-strip ui-only">사진 영역은 <b>클릭</b>해서 이미지를 추가하고, 글자는 <b>클릭 후 바로 수정</b>할 수 있어요. + 버튼으로 항목을 추가·삭제할 수 있습니다.</div>
+<div class="help-strip ui-only">사진 영역은 <b>클릭</b>해서 이미지를 추가하고, 글자는 <b>클릭 후 바로 수정</b>할 수 있어요. + 버튼으로 항목을 추가·삭제할 수 있습니다. 저장 버튼은 전체 5개 페이지를 한 번에 저장해요.</div>
 
 <div class="stage">
 
@@ -415,9 +427,11 @@ body.exporting [contenteditable="true"]:focus{background:transparent;box-shadow:
 <input type="file" id="fileInput" class="file-hidden" accept="image/*">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const spreads = Array.from(document.querySelectorAll('.spread'));
 const dotsWrap = document.getElementById('dots');
+const spreadNames = ['cover-contents','profiles','timeline','todays-look','chemistry-quotes'];
 let current = 0;
 
 spreads.forEach((s,i)=>{
@@ -428,14 +442,17 @@ spreads.forEach((s,i)=>{
 });
 const dotEls = Array.from(dotsWrap.children);
 
-function goTo(i){
-  if(i<0) i = spreads.length-1;
-  if(i>=spreads.length) i = 0;
+function setActive(i){
   spreads[current].classList.remove('active');
   dotEls[current].classList.remove('active');
   current = i;
   spreads[current].classList.add('active');
   dotEls[current].classList.add('active');
+}
+function goTo(i){
+  if(i<0) i = spreads.length-1;
+  if(i>=spreads.length) i = 0;
+  setActive(i);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.getElementById('prevBtn').addEventListener('click',()=>goTo(current-1));
@@ -541,20 +558,73 @@ document.getElementById('quoteBox').addEventListener('click',(e)=>{
   }
 });
 
-document.getElementById('saveBtn').addEventListener('click', async ()=>{
-  const target = spreads[current];
+/* ---------- export: capture every spread as canvas ---------- */
+const exportStatus = document.getElementById('exportStatus');
+const saveAllPngBtn = document.getElementById('saveAllPngBtn');
+const savePdfBtn = document.getElementById('savePdfBtn');
+
+function setExportButtonsDisabled(v){
+  saveAllPngBtn.disabled = v;
+  savePdfBtn.disabled = v;
+}
+
+async function captureAllSpreads(){
+  const originalIndex = current;
   document.body.classList.add('exporting');
+  setExportButtonsDisabled(true);
+  const canvases = [];
+  for(let i=0;i<spreads.length;i++){
+    setActive(i);
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    exportStatus.textContent = `저장 준비 중 (${i+1}/${spreads.length})`;
+    const canvas = await html2canvas(spreads[i], {backgroundColor:'#FFFFFF', scale:2, useCORS:true});
+    canvases.push(canvas);
+  }
+  setActive(originalIndex);
+  document.body.classList.remove('exporting');
+  setExportButtonsDisabled(false);
+  exportStatus.textContent = '';
+  return canvases;
+}
+
+saveAllPngBtn.addEventListener('click', async ()=>{
   try{
-    const canvas = await html2canvas(target, {backgroundColor:'#FFFFFF', scale:2, useCORS:true});
-    const link = document.createElement('a');
-    const names = ['cover-contents','profiles','timeline','todays-look','chemistry-quotes'];
-    link.download = `pair-magazine_${names[current] || current}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    const canvases = await captureAllSpreads();
+    canvases.forEach((canvas,i)=>{
+      const link = document.createElement('a');
+      link.download = `pair-magazine_${String(i+1).padStart(2,'0')}_${spreadNames[i] || i}.png`;
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
   }catch(err){
     alert('이미지 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
-  }finally{
     document.body.classList.remove('exporting');
+    setExportButtonsDisabled(false);
+  }
+});
+
+savePdfBtn.addEventListener('click', async ()=>{
+  try{
+    const canvases = await captureAllSpreads();
+    const { jsPDF } = window.jspdf;
+    let pdf = null;
+    canvases.forEach((canvas,i)=>{
+      const w = canvas.width, h = canvas.height;
+      const orientation = w >= h ? 'landscape' : 'portrait';
+      if(i===0){
+        pdf = new jsPDF({ orientation, unit:'px', format:[w,h] });
+      }else{
+        pdf.addPage([w,h], orientation);
+      }
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, w, h);
+    });
+    pdf.save('pair-magazine.pdf');
+  }catch(err){
+    alert('PDF 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
+    document.body.classList.remove('exporting');
+    setExportButtonsDisabled(false);
   }
 });
 </script>
