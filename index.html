@@ -70,6 +70,8 @@ body{
 .toolbar .save-btn:hover{background:var(--wisteria);}
 .toolbar .pdf-btn{background:var(--aqua-deep);border-color:var(--aqua-deep);color:#fff;font-weight:700;}
 .toolbar .pdf-btn:hover{background:var(--aqua);}
+.toolbar .epub-btn{background:var(--periwinkle-deep);border-color:var(--periwinkle-deep);color:#fff;font-weight:700;}
+.toolbar .epub-btn:hover{background:var(--periwinkle);}
 .export-status{font-size:12px;color:var(--aqua);min-width:88px;}
 .help-strip{text-align:center;font-size:12px;color:var(--muted);padding:9px 12px;background:#EAE6F2;letter-spacing:.02em;}
 .help-strip b{color:var(--wisteria-deep);}
@@ -209,6 +211,34 @@ body{
 
 .file-hidden{display:none;}
 
+/* ---- selection formatting toolbar ---- */
+.sel-toolbar{
+  position:fixed;z-index:200;display:none;gap:4px;
+  background:#2E2E48;padding:6px;border-radius:8px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+.sel-toolbar.show{display:flex;}
+.sel-toolbar button{
+  font-family:'Gothic A1',sans-serif;font-size:12px;font-weight:600;
+  color:#fff;background:transparent;border:1px solid rgba(255,255,255,.25);
+  border-radius:5px;padding:6px 10px;cursor:pointer;line-height:1;
+}
+.sel-toolbar button:hover{background:rgba(255,255,255,.15);}
+.sel-toolbar button#selItalicBtn{font-style:italic;}
+.sel-toolbar button#selBoldBtn{font-weight:900;}
+.sel-toolbar .sep{width:1px;background:rgba(255,255,255,.22);margin:2px 2px;}
+.sel-color-btn{
+  position:relative;width:30px;height:30px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.35);cursor:pointer;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+}
+.sel-color-btn input[type="color"]{
+  position:absolute;inset:-4px;width:calc(100% + 8px);height:calc(100% + 8px);
+  border:none;padding:0;cursor:pointer;opacity:0;
+}
+.sel-color-btn .swatch-fill{position:absolute;inset:0;pointer-events:none;}
+.sel-toolbar button#selClearHighlightBtn{font-size:11px;padding:6px 8px;}
+
 body.exporting .ui-only,
 body.exporting .tl-del,
 body.exporting .q-del,
@@ -233,8 +263,9 @@ body.exporting [contenteditable="true"]:focus{background:transparent;box-shadow:
   <div class="dots" id="dots"></div>
   <button id="nextBtn" class="ui-only">다음 ›</button>
   <span class="export-status ui-only" id="exportStatus"></span>
-  <button id="saveAllPngBtn" class="save-btn">◈ PNG 전체 저장</button>
+  <button id="saveAllPngBtn" class="save-btn">◈ PNG 한 장으로 저장</button>
   <button id="savePdfBtn" class="pdf-btn">▤ PDF로 저장</button>
+  <button id="saveEpubBtn" class="epub-btn">📖 EPUB로 저장</button>
 </div>
 <div class="help-strip ui-only">사진 영역은 <b>클릭</b>해서 이미지를 추가하고, 글자는 <b>클릭 후 바로 수정</b>할 수 있어요. + 버튼으로 항목을 추가·삭제할 수 있습니다. 저장 버튼은 전체 5개 페이지를 한 번에 저장해요.</div>
 
@@ -434,8 +465,20 @@ body.exporting [contenteditable="true"]:focus{background:transparent;box-shadow:
 
 <input type="file" id="fileInput" class="file-hidden" accept="image/*">
 
+<div class="sel-toolbar ui-only" id="selToolbar">
+  <button id="selItalicBtn" type="button">기울임</button>
+  <button id="selBoldBtn" type="button">강조표시</button>
+  <div class="sep"></div>
+  <label class="sel-color-btn" id="selHighlightLabel" title="하이라이트 색상 선택">
+    <span class="swatch-fill" id="selSwatchFill" style="background:#FDE68A;"></span>
+    <input type="color" id="selHighlightInput" value="#FDE68A">
+  </label>
+  <button id="selClearHighlightBtn" type="button">지우기</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const spreads = Array.from(document.querySelectorAll('.spread'));
 const dotsWrap = document.getElementById('dots');
@@ -566,14 +609,126 @@ document.getElementById('quoteBox').addEventListener('click',(e)=>{
   }
 });
 
-/* ---------- export: capture every spread as canvas ---------- */
+/* ---------- selection formatting toolbar (italic / highlight) ---------- */
+const selToolbar = document.getElementById('selToolbar');
+const selItalicBtn = document.getElementById('selItalicBtn');
+const selBoldBtn = document.getElementById('selBoldBtn');
+
+function isInsideEditable(node){
+  let el = node.nodeType === 1 ? node : node.parentElement;
+  while(el){
+    if(el.isContentEditable) return true;
+    el = el.parentElement;
+  }
+  return false;
+}
+
+function updateSelToolbar(){
+  const sel = window.getSelection();
+  if(!sel || sel.isCollapsed || sel.rangeCount === 0){
+    selToolbar.classList.remove('show');
+    return;
+  }
+  const anchorNode = sel.anchorNode;
+  if(!anchorNode || !isInsideEditable(anchorNode)){
+    selToolbar.classList.remove('show');
+    return;
+  }
+  const range = sel.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+  if(rect.width === 0 && rect.height === 0){
+    selToolbar.classList.remove('show');
+    return;
+  }
+  selToolbar.classList.add('show');
+  const tbRect = selToolbar.getBoundingClientRect();
+  let left = rect.left + rect.width/2 - tbRect.width/2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tbRect.width - 8));
+  let top = rect.top - tbRect.height - 10;
+  if(top < 8) top = rect.bottom + 10;
+  selToolbar.style.left = left + 'px';
+  selToolbar.style.top = top + 'px';
+}
+
+document.addEventListener('mouseup', ()=>{ setTimeout(updateSelToolbar, 0); });
+document.addEventListener('keyup', (e)=>{
+  if(document.activeElement && document.activeElement.isContentEditable) setTimeout(updateSelToolbar, 0);
+});
+window.addEventListener('scroll', ()=> selToolbar.classList.remove('show'), true);
+document.addEventListener('mousedown', (e)=>{
+  if(!selToolbar.contains(e.target)) selToolbar.classList.remove('show');
+});
+
+function preserveSelectionCommand(btn, fn){
+  btn.addEventListener('mousedown', (e)=>{
+    e.preventDefault();
+    fn();
+    setTimeout(updateSelToolbar, 0);
+  });
+}
+
+preserveSelectionCommand(selItalicBtn, ()=>{
+  document.execCommand('italic');
+});
+
+preserveSelectionCommand(selBoldBtn, ()=>{
+  document.execCommand('bold');
+});
+
+/* highlight with a user-chosen color, preserving the selection through
+   the native color picker (which otherwise steals focus/collapses it) */
+const selHighlightInput = document.getElementById('selHighlightInput');
+const selSwatchFill = document.getElementById('selSwatchFill');
+const selHighlightLabel = document.getElementById('selHighlightLabel');
+const selClearHighlightBtn = document.getElementById('selClearHighlightBtn');
+let savedHighlightRange = null;
+
+selHighlightLabel.addEventListener('mousedown', ()=>{
+  const sel = window.getSelection();
+  if(sel && sel.rangeCount > 0 && !sel.isCollapsed){
+    savedHighlightRange = sel.getRangeAt(0).cloneRange();
+  }
+});
+
+function applyHighlight(color){
+  if(!savedHighlightRange) return;
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(savedHighlightRange);
+  document.execCommand('styleWithCSS', false, true);
+  try{
+    document.execCommand('hiliteColor', false, color);
+  }catch(e){
+    document.execCommand('backColor', false, color);
+  }
+}
+
+selHighlightInput.addEventListener('input', (e)=>{
+  selSwatchFill.style.background = e.target.value;
+  applyHighlight(e.target.value);
+});
+selHighlightInput.addEventListener('change', ()=>{
+  setTimeout(updateSelToolbar, 0);
+});
+
+preserveSelectionCommand(selClearHighlightBtn, ()=>{
+  document.execCommand('styleWithCSS', false, true);
+  try{
+    document.execCommand('hiliteColor', false, 'transparent');
+  }catch(e){
+    document.execCommand('backColor', false, 'transparent');
+  }
+});
+
 const exportStatus = document.getElementById('exportStatus');
 const saveAllPngBtn = document.getElementById('saveAllPngBtn');
 const savePdfBtn = document.getElementById('savePdfBtn');
+const saveEpubBtn = document.getElementById('saveEpubBtn');
 
 function setExportButtonsDisabled(v){
   saveAllPngBtn.disabled = v;
   savePdfBtn.disabled = v;
+  saveEpubBtn.disabled = v;
 }
 
 async function captureAllSpreads(){
@@ -595,17 +750,34 @@ async function captureAllSpreads(){
   return canvases;
 }
 
+function combineCanvasesVertically(canvases, gap){
+  const width = Math.max(...canvases.map(c=>c.width));
+  const totalHeight = canvases.reduce((sum,c)=>sum+c.height,0) + gap*(canvases.length-1);
+  const master = document.createElement('canvas');
+  master.width = width;
+  master.height = totalHeight;
+  const ctx = master.getContext('2d');
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0,0,width,totalHeight);
+  let y = 0;
+  canvases.forEach(c=>{
+    const x = Math.round((width - c.width)/2);
+    ctx.drawImage(c, x, y);
+    y += c.height + gap;
+  });
+  return master;
+}
+
 saveAllPngBtn.addEventListener('click', async ()=>{
   try{
     const canvases = await captureAllSpreads();
-    canvases.forEach((canvas,i)=>{
-      const link = document.createElement('a');
-      link.download = `pair-magazine_${String(i+1).padStart(2,'0')}_${spreadNames[i] || i}.png`;
-      link.href = canvas.toDataURL('image/png');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    });
+    const master = combineCanvasesVertically(canvases, 48);
+    const link = document.createElement('a');
+    link.download = 'pair-magazine_all-pages.png';
+    link.href = master.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }catch(err){
     alert('이미지 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
     document.body.classList.remove('exporting');
@@ -631,6 +803,145 @@ savePdfBtn.addEventListener('click', async ()=>{
     pdf.save('pair-magazine.pdf');
   }catch(err){
     alert('PDF 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
+    document.body.classList.remove('exporting');
+    setExportButtonsDisabled(false);
+  }
+});
+
+/* ---------- EPUB export: each single page becomes one ebook page ---------- */
+const epubPageIds = ['page-cover','page-contents','page-char1','page-char2','page-tl1','page-tl2','page-look1','page-look2','page-chem','page-quotes'];
+const epubSpreadForPage = [0,0,1,1,2,2,3,3,4,4];
+const epubPageTitles = ['커버','목차 & 에디터스 레터','캐릭터1 프로필','캐릭터2 프로필','타임라인 Part 1','타임라인 Part 2','오늘의 룩 1','오늘의 룩 2','케미스트리 인덱스','시그니처 대사'];
+
+async function captureAllPagesForEpub(){
+  const originalIndex = current;
+  document.body.classList.add('exporting');
+  setExportButtonsDisabled(true);
+  const pages = [];
+  for(let i=0;i<epubPageIds.length;i++){
+    setActive(epubSpreadForPage[i]);
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    exportStatus.textContent = `EPUB 준비 중 (${i+1}/${epubPageIds.length})`;
+    const el = document.getElementById(epubPageIds[i]);
+    const canvas = await html2canvas(el, {backgroundColor:'#FFFFFF', scale:2, useCORS:true});
+    pages.push(canvas);
+  }
+  setActive(originalIndex);
+  document.body.classList.remove('exporting');
+  setExportButtonsDisabled(false);
+  exportStatus.textContent = '';
+  return pages;
+}
+
+function uuidv4(){
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c)=>{
+    const r = Math.random()*16|0, v = c==='x' ? r : (r&0x3|0x8);
+    return v.toString(16);
+  });
+}
+
+saveEpubBtn.addEventListener('click', async ()=>{
+  try{
+    const pageCanvases = await captureAllPagesForEpub();
+    const zip = new JSZip();
+    zip.file('mimetype', 'application/epub+zip', {compression:'STORE'});
+    zip.folder('META-INF').file('container.xml',
+`<?xml version="1.0" encoding="UTF-8"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+  </rootfiles>
+</container>`);
+
+    const oebps = zip.folder('OEBPS');
+    const imagesFolder = oebps.folder('images');
+    const textFolder = oebps.folder('text');
+
+    let manifestItems = '';
+    let spineItems = '';
+    let navItems = '';
+
+    pageCanvases.forEach((canvas, idx)=>{
+      const num = String(idx+1).padStart(2,'0');
+      const w = canvas.width, h = canvas.height;
+      const base64 = canvas.toDataURL('image/png').split(',')[1];
+      imagesFolder.file(`page-${num}.png`, base64, {base64:true});
+      const title = epubPageTitles[idx] || ('Page ' + (idx+1));
+      const xhtml =
+`<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=${w}, height=${h}"/>
+<title>${title}</title>
+<style>html,body{margin:0;padding:0;background:#fff;}img{width:100%;height:100%;display:block;}</style>
+</head>
+<body>
+<img src="../images/page-${num}.png" alt="${title}"/>
+</body>
+</html>`;
+      textFolder.file(`page-${num}.xhtml`, xhtml);
+      manifestItems += `<item id="page${num}" href="text/page-${num}.xhtml" media-type="application/xhtml+xml"/>\n    <item id="img${num}" href="images/page-${num}.png" media-type="image/png"/>\n    `;
+      spineItems += `<itemref idref="page${num}"/>\n    `;
+      navItems += `<li><a href="text/page-${num}.xhtml">${title}</a></li>\n      `;
+    });
+
+    const mastEl = document.querySelector('.mast');
+    const bookTitle = (mastEl && mastEl.textContent.trim()) || '페어 매거진';
+    const uuid = 'urn:uuid:' + uuidv4();
+    const modified = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+
+    const opf =
+`<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="BookId">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:identifier id="BookId">${uuid}</dc:identifier>
+    <dc:title>${bookTitle}</dc:title>
+    <dc:language>ko</dc:language>
+    <dc:creator>Pair Magazine</dc:creator>
+    <meta property="dcterms:modified">${modified}</meta>
+    <meta property="rendition:layout">pre-paginated</meta>
+    <meta property="rendition:orientation">auto</meta>
+    <meta property="rendition:spread">auto</meta>
+  </metadata>
+  <manifest>
+    <item id="nav" href="nav.xhtml" properties="nav" media-type="application/xhtml+xml"/>
+    ${manifestItems}
+  </manifest>
+  <spine page-progression-direction="ltr">
+    ${spineItems}
+  </spine>
+</package>`;
+
+    const nav =
+`<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+<head><meta charset="utf-8"/><title>목차</title></head>
+<body>
+  <nav epub:type="toc" id="toc">
+    <h1>${bookTitle}</h1>
+    <ol>
+      ${navItems}
+    </ol>
+  </nav>
+</body>
+</html>`;
+
+    oebps.file('content.opf', opf);
+    oebps.file('nav.xhtml', nav);
+
+    const blob = await zip.generateAsync({type:'blob', mimeType:'application/epub+zip'});
+    const link = document.createElement('a');
+    link.download = 'pair-magazine.epub';
+    link.href = URL.createObjectURL(blob);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }catch(err){
+    console.error(err);
+    alert('EPUB 저장 중 문제가 발생했습니다. 다시 시도해주세요.');
     document.body.classList.remove('exporting');
     setExportButtonsDisabled(false);
   }
